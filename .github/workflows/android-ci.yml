@@ -5,7 +5,7 @@ on:
   pull_request:      # Runs on any pull request
 
 jobs:
-  test:
+  unit-test:
     runs-on: ubuntu-latest
     
     steps:
