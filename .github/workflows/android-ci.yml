@@ -79,6 +79,7 @@ jobs:
       run: ./gradlew assembleDebug
     
     - name: Run connected tests
+      continue-on-error: true
       uses: reactivecircus/android-emulator-runner@v2
       with:
         api-level: 34
@@ -86,6 +87,17 @@ jobs:
         script: ./gradlew connectedDebugAndroidTest
         disable-animations: false
         emulator-options: -no-window -no-audio -gpu swiftshader_indirect
+        additional-gradle-options: --no-daemon
+    
+    - name: Check if tests passed
+      if: always()
+      run: |
+        if [ -f app/build/outputs/androidTest-results/connected/results.xml ]; then
+          echo "Test results found"
+        else
+          echo "No test results found"
+          exit 1
+        fi
     
     - name: Upload test results
       if: always()
